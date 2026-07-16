@@ -1,5 +1,5 @@
-FROM registry.access.redhat.com/ubi9/nginx-124
+FROM nginxinc/nginx-unprivileged:stable-alpine
 
-COPY index.html /opt/app-root/src/
+COPY index.html /usr/share/nginx/html/index.html
 
 EXPOSE 8080
