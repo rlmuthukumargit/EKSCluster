@@ -1,6 +1,6 @@
 locals {
   # prefer 2 AZs in dev (but will fall back to available AZs)
-  az_count = min([2, length(data.aws_availability_zones.available.names)])
+  az_count = min(2, length(data.aws_availability_zones.available.names))
 }
 
 data "aws_availability_zones" "available" {
@@ -28,8 +28,6 @@ module "eks" {
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
-
-  node_groups = var.node_groups
-
-  tags = var.tags
+  node_groups     = var.node_groups
+  tags            = var.tags
 }
