@@ -5,22 +5,23 @@ variable "aws_region" {
 
 variable "vpc_name" {
   type    = string
-  default = "prod-eks-vpc"
+  default = "qa-eks-vpc"
 }
 
 variable "vpc_cidr" {
   type    = string
-  default = "10.30.0.0/16"
+  default = "10.20.0.0/16"
 }
 
 variable "public_subnets" {
   type = list(string)
-  default = ["10.30.0.0/24", "10.30.1.0/24", "10.30.2.0/24"]
+  # 6-subnet layout: 3 public subnets + 3 private subnets
+  default = ["10.20.0.0/24", "10.20.1.0/24", "10.20.2.0/24"]
 }
 
 variable "private_subnets" {
   type = list(string)
-  default = ["10.30.101.0/24", "10.30.102.0/24", "10.30.103.0/24"]
+  default = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 }
 
 variable "enable_nat_gateway" {
@@ -30,12 +31,12 @@ variable "enable_nat_gateway" {
 
 variable "single_nat_gateway" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "cluster_name" {
   type    = string
-  default = "prod-eks"
+  default = "qa-eks"
 }
 
 variable "cluster_version" {
@@ -46,13 +47,13 @@ variable "cluster_version" {
 variable "node_groups" {
   type = map(any)
   default = {
-    prod-ng = {
-      desired_capacity = 3
-      min_capacity     = 2
-      max_capacity     = 5
-      instance_types   = ["m6i.large"]
+    qa-nodes = {
+      desired_capacity = 2
+      min_capacity     = 1
+      max_capacity     = 3
+      instance_types   = ["t3.medium"]
       key_name         = null
-      ssh_allow_cidr   = "10.0.0.0/8" # restrict SSH in prod
+      ssh_allow_cidr   = "0.0.0.0/0"
     }
   }
 }
@@ -60,7 +61,7 @@ variable "node_groups" {
 variable "tags" {
   type = map(string)
   default = {
-    Environment = "prod"
+    Environment = "qa"
     ManagedBy   = "terraform"
   }
 }
