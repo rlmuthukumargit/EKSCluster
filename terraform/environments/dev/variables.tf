@@ -41,7 +41,7 @@ variable "cluster_name" {
 
 variable "cluster_version" {
   type    = string
-  default = "1.28"
+  default = "1.32"
 }
 
 variable "node_groups" {
@@ -51,7 +51,7 @@ variable "node_groups" {
       desired_capacity = 1
       min_capacity     = 1
       max_capacity     = 2
-      instance_types   = ["t3.medium"]
+      instance_types   = ["t3.small"]
       key_name         = null
       ssh_allow_cidr   = "0.0.0.0/0"
     }

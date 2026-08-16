@@ -1,11 +1,21 @@
 locals {
   # prefer 2 AZs in dev (but will fall back to available AZs)
   az_count = min(2, length(data.aws_availability_zones.available.names))
+
+  cluster_admin_role = [
+    {
+      rolearn  = data.aws_caller_identity.current.arn
+      username = "cluster-admin"
+      groups   = ["system:masters"]
+    }
+  ]
 }
 
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
+data "aws_caller_identity" "current" {}
 
 module "vpc" {
   source = "../../modules/vpc"
@@ -30,4 +40,14 @@ module "eks" {
   public_subnets  = module.vpc.public_subnets
   node_groups     = var.node_groups
   tags            = var.tags
+
+  cluster_enabled_log_types  = []
+  create_cloudwatch_log_group = false
+  create_kms_key             = true
+  cluster_encryption_config = {
+    resources = ["secrets"]
+  }
+
+  manage_aws_auth_configmap = true
+  aws_auth_roles            = local.cluster_admin_role
 }
